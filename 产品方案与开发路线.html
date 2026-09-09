@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="欧洲旅行智能体：面向 EvoTavern 黑客松的产品功能、方案取舍、P0/P1/P2、工作流程与验收标准。">
+<title>欧洲旅行智能体｜产品方案与参赛开发路线</title>
+<style>
+:root{--ink:#162c3c;--muted:#526879;--blue:#1257ce;--line:#dce4ec;--paper:#fff;--bg:#f3f6fa;--green:#08785b;--purple:#7051ae;--orange:#9b4e0c}
+*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:28px}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.8 -apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif}a{color:var(--blue);text-underline-offset:3px}button{font:inherit;cursor:pointer}button:focus-visible,a:focus-visible,summary:focus-visible{outline:3px solid #e89b15;outline-offset:4px}h1,h2,h3,p{margin-top:0}h1{font-size:42px;line-height:1.3;letter-spacing:-1px;margin-bottom:16px}h2{font-size:27px;line-height:1.4;margin-bottom:22px}h3{font-size:19px;line-height:1.5;margin-bottom:10px}p{margin-bottom:14px}ul,ol{padding-left:23px;margin:10px 0 18px}li{margin-bottom:7px}small,.meta{font-size:14px;color:var(--muted)}strong{font-weight:650}code{font-size:14px;background:#eef2f8;padding:2px 5px;border-radius:4px;overflow-wrap:anywhere}.shell{max-width:1500px;margin:auto;display:grid;grid-template-columns:240px minmax(0,1fr);gap:38px;padding:28px 36px 80px}.side{position:sticky;top:28px;align-self:start;max-height:calc(100vh - 56px);overflow:auto}.brand{font-size:15px;font-weight:750;letter-spacing:1px;color:var(--blue);margin:0 0 22px}.side nav a{display:block;font-size:14px;padding:7px 12px;margin:2px 0;text-decoration:none;color:var(--muted);border-left:2px solid transparent}.side nav a:hover{background:#e6edf8;border-color:var(--blue);color:var(--blue)}.side .note{font-size:13px;margin:24px 12px;color:var(--muted)}.print{border:1px solid var(--line);background:white;color:var(--ink);border-radius:7px;padding:8px 16px;margin:15px 12px}.hero{padding:36px 38px;background:#122f46;color:white;border-radius:14px;margin-bottom:25px;position:relative;overflow:hidden}.hero .meta{color:#b6cbde}.eyebrow{font-size:13px;letter-spacing:2px;color:#8ec5ff;font-weight:650;margin-bottom:18px}.hero p.lead{font-size:19px;max-width:830px;line-height:1.8}.hero .rule{border-top:1px solid #3b5267;padding-top:18px;margin-top:24px;display:flex;flex-wrap:wrap;gap:10px 28px;font-size:14px;color:#d7e6f3}.section{background:white;padding:32px 36px;margin:0 0 24px;border:1px solid var(--line);border-radius:12px}.secnum{font-size:14px;color:var(--blue);font-weight:700;letter-spacing:1px;display:block;margin-bottom:8px}.callout{background:#edf4ff;border-left:4px solid var(--blue);padding:17px 20px;margin:20px 0;border-radius:0 7px 7px 0}.callout p:last-child{margin-bottom:0}.callout.warn{background:#fff7ed;border-color:#c67926}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.grid.two{grid-template-columns:repeat(2,minmax(0,1fr))}.card{border:1px solid var(--line);border-radius:9px;padding:20px}.card p:last-child{margin-bottom:0}.card .big{font-size:27px;font-weight:750;line-height:1.3;margin-bottom:10px}.tag{display:inline-block;padding:2px 9px;border-radius:5px;font-size:13px;font-weight:700;white-space:nowrap;line-height:1.7;margin:0 5px 5px 0}.p0{color:var(--blue);background:#eaf1ff}.p1{color:var(--green);background:#e5f5ef}.p2{color:var(--purple);background:#f0ebfa}.fact{background:#eaf1ff;color:var(--blue)}.judgment{background:#fff0df;color:var(--orange)}.pending{background:#eff1f3;color:#556570}.table-wrap{overflow:auto;margin:18px 0 12px}table{width:100%;border-collapse:collapse;font-size:15px;line-height:1.7;text-align:left}th{background:#f0f4f8;color:#30485d;font-weight:650}td,th{vertical-align:top;padding:13px 14px;border-bottom:1px solid var(--line)}.wide{min-width:780px}td:first-child{font-weight:600}tr:last-child td{border-bottom:0}.timeline{counter-reset:step;list-style:none;padding:0}.timeline>li{position:relative;padding:0 0 25px 51px;margin:0;border-left:2px solid #dce7f3;margin-left:15px}.timeline>li:before{counter-increment:step;content:counter(step);position:absolute;left:-17px;top:0;background:var(--blue);color:#fff;width:32px;height:32px;border-radius:50%;text-align:center;line-height:32px;font-size:14px;font-weight:700}.timeline>li:last-child{border-color:transparent;padding-bottom:0}.timeline p:last-child{margin-bottom:0}.flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:20px 0}.flow span{background:#f0f5fb;border:1px solid var(--line);padding:10px 14px;border-radius:6px;font-size:14px}.flow b{color:#66829b}.feature{border-top:1px solid var(--line);padding-top:22px;margin-top:23px}.feature:first-of-type{border-top:0;margin-top:0;padding-top:0}.feature h3{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap}.spec{display:grid;grid-template-columns:115px minmax(0,1fr);gap:9px 18px;margin:12px 0;font-size:15px}.spec dt{font-weight:650;color:#4b6477}.spec dd{margin:0}.light{color:var(--muted)}.phone{background:#f3f7fc;border:1px solid #cbd9e7;border-radius:13px;padding:20px;max-width:440px}.phone-head{border-bottom:1px solid #cad8e5;padding-bottom:12px;margin-bottom:15px;font-weight:700}.phone-row{display:grid;grid-template-columns:60px 1fr;gap:12px;font-size:14px;margin:15px 0}.phone-row time{font-weight:700;color:var(--blue)}.phone-row strong{display:block}.phone-row p{margin:3px 0;color:var(--muted)}.foot{color:var(--muted);font-size:13px;text-align:center;padding:10px}.sources{font-size:14px;overflow-wrap:anywhere}.sources li{padding-bottom:8px}details{border:1px solid var(--line);border-radius:7px;padding:13px 16px;margin:12px 0}summary{font-weight:650;cursor:pointer}.check li{padding-left:2px}hr{border:0;border-top:1px solid var(--line);margin:24px 0}.statusline{font-size:14px;border:1px solid var(--line);border-radius:7px;padding:12px 16px;background:white;margin-bottom:24px}
+@media(max-width:1050px){.shell{grid-template-columns:185px minmax(0,1fr);gap:20px;padding:22px 20px}.section{padding:26px}.grid{grid-template-columns:1fr}.hero{padding:30px}h1{font-size:34px}}
+@media(max-width:720px){.shell{display:block;padding:16px 12px 40px}.side{position:static;max-height:none;overflow:visible;margin-bottom:20px}.brand{margin-bottom:10px}.side nav{display:flex;gap:6px;overflow:auto;padding-bottom:8px}.side nav a{white-space:nowrap;border:1px solid var(--line);border-radius:6px;background:white;padding:5px 9px}.side .note{display:none}.print{margin:8px 0}.hero{padding:25px 22px}.hero p.lead{font-size:17px}h1{font-size:30px}h2{font-size:23px}.section{padding:24px 20px}.grid.two{grid-template-columns:1fr}.spec{grid-template-columns:1fr;gap:3px}.spec dd{margin-bottom:9px}.flow{gap:6px}.flow span{padding:7px 9px}.timeline>li{padding-left:33px}.hero .rule{gap:7px}.statusline{font-size:13px}}
+@media print{@page{size:A4;margin:16mm}html{scroll-behavior:auto}body{background:white;font-size:10pt;line-height:1.6}.shell{display:block;padding:0;max-width:none}.side,.print{display:none}.hero{background:white!important;color:var(--ink);border:2px solid var(--ink);padding:20px;border-radius:0}.hero .meta,.eyebrow,.hero .rule{color:var(--muted)}.hero p.lead{font-size:12pt}.hero .rule{border-color:var(--line)}h1{font-size:25pt}h2{font-size:17pt;break-after:avoid}h3{font-size:12pt;break-after:avoid}.section{border:0;border-radius:0;padding:16px 0;break-before:auto}.grid,.grid.two{grid-template-columns:1fr 1fr}.card,.callout,.phone,.timeline>li{break-inside:avoid}.table-wrap{overflow:visible}.wide{min-width:0}table,.spec{font-size:9pt}td,th{padding:8px}thead{display:table-header-group}tr{break-inside:avoid}.tag{font-size:9pt}.meta,small,.sources{font-size:9pt}a{color:var(--ink)}.secnum{color:var(--ink)}.statusline{font-size:9pt}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+</style>
+</head>
+<body>
+<div class="shell">
+<aside class="side" aria-label="方案目录">
+<p class="brand">TRAVEL AGENT / 产品讨论稿</p>
+<nav>
+<a href="#decision">01 一页决策</a><a href="#strategy">02 参赛依据</a><a href="#vision">03 完整产品蓝图</a><a href="#scope">04 功能与优先级</a><a href="#p0">05 功能详细规格</a><a href="#journey">06 用户工作流程</a><a href="#architecture">07 技术方案</a><a href="#roadmap">08 开发推进步骤</a><a href="#acceptance">09 测试与验收</a><a href="#demo">10 路演演示</a><a href="#decisions">11 团队待定事项</a><a href="#sources">12 资料与证据</a>
+</nav>
+<button class="print" onclick="window.print()">打印 / 保存为 PDF</button>
+<p class="note">阅读顺序：先对齐 01、04、08，再讨论技术细节。<br><br>P0 是必须交付，P1 是增强竞争力，P2 是后续产品化。</p>
+</aside>
+<main>
+<header class="hero">
+<div class="eyebrow">EVOTAVERN · HACKATHON PRODUCT BRIEF</div>
+<h1>一趟旅行，<br>一套持续更新的交付。</h1>
+<p class="lead">欧洲旅行智能体：把用户的愿望转化为总行程、每日行动卡与背景知识手册；当时间、体力和预算改变时，重新安排，并保留下一次能用上的经验。</p>
+<div class="rule"><span>讨论稿 v1.1 · 2026.09.09</span><span>建议赛道：原生智能体</span><span>开发方式：团队使用 Codex 协作</span></div>
+</header>
+<div class="statusline"><strong>v1.1 更新：</strong>已纳入行程体检、同行者偏好协调、照片触发操作、空档推荐、经验纠错复核五个新增方向；范围已确认纳入方案，优先级与最小版本为开发建议。<br><strong>文档性质：</strong>产品与开发范围建议，不是已经实现的功能列表。目标是提高参赛竞争力；不承诺获奖。P0 / P1 / P2 中的“0”是数字零。</div>
+
+<section class="section" id="decision">
+<span class="secnum">01 / DECISION</span><h2>先对齐：这次到底要做出什么</h2>
+<div class="callout"><p><strong>参赛版本目标：</strong>围绕一个熟悉的欧洲城市、三天旅行，真实完成“需求采集 / 导入已有计划 → 行程体检 → 生成整套旅行手册 → 修改安排 → 同步更新 → 保存可复用经验”。手机网页可操作、可保存、可再次打开。</p></div>
+<div class="grid">
+<div class="card"><span class="tag p0">P0 · 必须完成</span><h3>完整交付 + 正确更新</h3><p>引导式需求采集、行程体检、总行程、每日行动卡、短篇背景手册、受约束的行程调整、个人经验复用与数据保存。</p></div>
+<div class="card"><span class="tag p1">P1 · 核心通过后</span><h3>预算与多模态体验</h3><p>依次增加票券照片触发操作、同行者偏好协调、90分钟空档推荐、经验纠错复核，再补实际账本、导出和小记。</p></div>
+<div class="card"><span class="tag p2">P2 · 比赛后</span><h3>完整旅行产品</h3><p>多城市内容库、翻译中心、预订分佣、退款跟踪、相册视频、多格式交付、多设备实时协作与商业化。</p></div>
+</div>
+<p class="light" style="margin-top:18px">建议默认：米兰三天，包含一个已预订的固定活动与少量核验过的景点。最终城市由团队根据现有资料确定；目的地数量不作为本次完成度指标。</p>
+<h3>面向谁、解决什么</h3>
+<p>首批用户是有欧洲自由行计划、希望省心、有体验偏好，但不熟悉当地信息与AI提示方法的中文用户。产品主动提醒其需要考虑什么，并交付能在路上使用的成果。</p>
+<ul><li><strong>信息碎片化：</strong>景点介绍、订票、地址、交通和注意事项分散，需要用户自行拼接。</li><li><strong>使用AI门槛：</strong>用户不一定知道该补充哪些条件，也难以检查生成结果是否完整。</li><li><strong>计划与现实脱节：</strong>晚出门、太累或花费变化后，需要手工修改多处内容。</li><li><strong>经验丢失：</strong>一次旅行中发现的偏好和踩坑经验，下一次又要重新说明。</li></ul>
+<p><strong>成功体验：</strong>用户看到“今天下一步做什么”；修改后不必检查每一张旧卡片；下一次安排能反映自己确认过的偏好。</p>
+</section>
+
+<section class="section" id="strategy">
+<span class="secnum">02 / COMPETITIVE REASONING</span><h2>为什么这样取舍，更适合参赛</h2>
+<div class="table-wrap"><table><thead><tr><th>证据类型</th><th>已经观察到的内容</th><th>我们据此采取的策略</th></tr></thead><tbody>
+<tr><td><span class="tag fact">本场海报</span></td><td>全场冠军强调完成度、突破性与真实价值；原生智能体赛道强调工具调用、可靠执行与可持续交付。</td><td>优先把整条真实流程跑通，用变更前后结果和验收记录证明质量。</td></tr>
+<tr><td><span class="tag fact">往届官方</span></td><td>杭州场强调经验共享、长记忆、个性化和持续改进。<a href="#s1">[1]</a></td><td>做一次清楚可见的“用户反馈 → 确认经验 → 后续复用”。</td></tr>
+<tr><td><span class="tag fact">往届官方</span></td><td>上海作品列表已有 EvoTravel，简介为会学习的AI旅行规划助手。详情页未成功读取。<a href="#s2">[2]</a></td><td>不能只用“AI旅游”或“会学习”解释创新，要具体展示一致更新与成套交付。</td></tr>
+<tr><td><span class="tag judgment">媒体线索</span></td><td>上海赛后报道描述A2A赛道冠军通过用户互动触发实际行动；未获得完整评审记录。<a href="#s3">[3]</a></td><td>安排观众能看懂的现场操作与明确结果。此推断不能当作官方评分规则。</td></tr>
+<tr><td><span class="tag fact">竞品官方</span></td><td>Mindtrip、Wanderlog已有个性化行程、地图、预订整理或预算等功能。<a href="#s4">[4]</a> <a href="#s5">[5]</a></td><td>少讲功能数量，多证明具体用户完成任务时减少了哪些操作与遗漏。</td></tr>
+</tbody></table></div>
+<div class="callout warn"><p><strong>证据边界：</strong>截至本稿，活动官网显示往届页面；深圳场详细评分权重、路演时长、EvoMap接入深度尚未核实。本文的优先级和演示时长均为开发建议，不能据此推算夺冠概率。</p></div>
+<div class="grid two"><div class="card"><h3>评委应能看见</h3><p>约束被读取、真实工具被调用、修改有依据、固定预订被保留、所有相关页面同步更新、反馈影响后续安排。</p></div><div class="card"><h3>观众应能感受到</h3><p>信息好找、每日卡好看且能用、无需写复杂提示词、现场改一个条件就能得到新的可执行安排。</p></div></div>
+<p style="margin-top:17px"><strong>赛道建议：</strong>仍选“原生智能体”。除非多智能体协作本身成为经验证的核心贡献，否则不为增加Agent数量改变架构。</p>
+</section>
+
+<section class="section" id="vision">
+<span class="secnum">03 / FULL PRODUCT VISION</span><h2>完整蓝图：旅行前、中、后的全部解决方案</h2>
+<p>长期愿景保留；参赛范围按优先级推进。不同阶段共享同一趟旅行的数据，避免形成互不相通的小工具。</p>
+<div class="table-wrap"><table class="wide"><thead><tr><th>阶段</th><th>用户问题</th><th>完整功能与交付物</th><th>本次覆盖</th></tr></thead><tbody>
+<tr><td>探索目的地</td><td>去哪、看什么、哪里订？</td><td>按城市与兴趣浏览；90分钟空档推荐；每城逐步扩充至约100个候选地点（不统一宣称“人人必去”）；官网和合作预订入口；小众酒吧、餐厅、俱乐部及当地经验。</td><td>P0仅收录演示城市约15–25个核验地点；完整目录P2。</td></tr>
+<tr><td>确定旅行后</td><td>如何安排5–15天？还漏了什么？</td><td>已有行程体检、同行者偏好协调、总计划、住宿与餐厅建议、预订清单、出发准备；景点背景、电影关联、着装要求、习俗、常用语、汇率参考；HTML / PDF / PPT / 备忘录等输出。</td><td>P0完成三天总计划与简明背景卡；P1一种导出；其余P2。</td></tr>
+<tr><td>每天出门前</td><td>今天怎么走、带什么、先做什么？</td><td>时间表、交通方式、经核验的公共交通指引、当地语言与英文定位、天气、着装建议、拍照点、入场与集合信息、返回酒店路线。</td><td>P0每日行动卡；可靠来源支持的内容才展示。</td></tr>
+<tr><td>旅行中·调整</td><td>晚点、太累、下雨，后面怎么办？</td><td>票券照片确认后锁定预订；区分固定预订与可调整项目；空档推荐；生成备选；说明改动、时间与费用影响；确认后同步更新。</td><td>P0主线。先覆盖晚出门与减少步行；天气驱动调整P1。</td></tr>
+<tr><td>旅行中·预算</td><td>花了多少、剩多少？</td><td>手动或拍照录入消费；按城市、日期、类别汇总；欧元与人民币展示；对比预计与实际；辅助选择后续活动。</td><td>P0预计花费与算术汇总；P1实际账本及小票识别。</td></tr>
+<tr><td>旅行中·理解与记录</td><td>菜单和货架看不懂，想记下当下？</td><td>菜单、路边说明和超市货架拍照翻译；景点讲解；照片＋感受生成可编辑小记和朋友圈文案。</td><td>P1轻量小记；独立翻译与全面讲解P2。</td></tr>
+<tr><td>旅行后</td><td>如何整理账单、待办、回忆与经验？</td><td>发票归档、退款待办与状态；每日相册、时间线视频、“第一顿饭到最后一顿饭”叙事；认识的人、想再去的地点、个人经验沉淀、纠错与复核。</td><td>P0反馈复用；P1简明旅程回顾；自动视频、退款集成等P2。</td></tr>
+</tbody></table></div>
+<p class="meta">退款涉及退票、商家退款或购物退税等不同流程；P2先明确具体类别。没有订单接入时，只能由用户记录状态，不能宣称系统已经完成退款。</p>
+</section>
+
+<section class="section" id="scope">
+<span class="secnum">04 / PRIORITIES</span><h2>P0 / P1 / P2：每个功能为什么留、何时做</h2>
+<p><span class="tag p0">P0</span>演示成立的必要条件。<span class="tag p1">P1</span>P0验收通过后依次增加。<span class="tag p2">P2</span>本次不承诺，保留在产品路线图。</p>
+<div class="table-wrap"><table class="wide"><thead><tr><th>功能</th><th>级别</th><th>保留 / 延后的理由</th><th>依赖与范围</th></tr></thead><tbody>
+<tr><td>引导式需求采集</td><td><span class="tag p0">P0</span></td><td>直接解决用户不会写提示词的问题，决定后续质量。</td><td>目的地、日期、酒店、同行者、兴趣、体力、预算、固定预订；可跳过未知项。</td></tr>
+<tr><td>总行程＋每日行动卡</td><td><span class="tag p0">P0</span></td><td>体现完整交付与产品审美，能实际陪伴旅行。</td><td>同一份结构化数据驱动；地址可导航、项目可调整、页面可重开。</td></tr>
+<tr><td>简明背景知识手册</td><td><span class="tag p0">P0</span></td><td>体现体验深度，让你的内容判断进入产品。</td><td>每个已选景点一张短卡；兴趣相关、可展开、保留来源。</td></tr>
+<tr><td>受约束的行程调整</td><td><span class="tag p0">P0</span></td><td>展示可靠执行，是参赛技术亮点。</td><td>锁定已订项目；校验时间与交通；展示差异后确认；无法满足时提供取舍。</td></tr>
+<tr><td>经验与偏好复用</td><td><span class="tag p0">P0</span></td><td>回应主办方主题，并展示“反馈产生了什么改变”。</td><td>少量来源明确的经验；用户确认长期偏好；下一次调用有记录。</td></tr>
+<tr><td>预计预算与少量订票链接</td><td><span class="tag p0">P0</span></td><td>让行程有现实约束与执行入口。</td><td>估价标时间、币种；未知不填零；点击不算预订成功。</td></tr>
+<tr><td>保存、版本、错误状态</td><td><span class="tag p0">P0</span></td><td>关系到完成度；失败不能破坏原行程。</td><td>先保存草案，再确认切换；保留上版；测试网络与接口失败。</td></tr>
+<tr><td>EvoMap真实接入</td><td><span class="tag p0">P0待规则</span></td><td>提高生态契合度；技术伙伴在第一阶段验证。</td><td>先跑通相关工作流检索与复用。是否硬性必做待确认；若赛事要求则是P0交付门槛。</td></tr>
+<tr><td>行程体检与修复</td><td><span class="tag p0">P0新增</span></td><td>主动找出可核验的问题；复用已有校验器，现场前后对比明确。</td><td>先支持文字和本产品行程；检查时间冲突、交通缓冲、固定预订。复杂PDF导入P2。</td></tr>
+<tr><td>票券照片触发行程操作</td><td><span class="tag p1">P1-1</span></td><td>展示从看懂图片到执行任务；直接连接预订与重排主线。</td><td>演出票照片→字段确认→锁定活动→体检→调整；不把识别当验票。</td></tr>
+<tr><td>同行者偏好协调</td><td><span class="tag p1">P1-2</span></td><td>评委可参与选择偏好，看到方案取舍。</td><td>两人、一天、同一设备输入；区分必须与偏好；输出两案，确认后采用。</td></tr>
+<tr><td>90分钟空档推荐</td><td><span class="tag p1">P1-3</span></td><td>体现行中即时决策与当地小众经验。</td><td>用户提供位置、空闲时长、下一活动；核验营业时间并计算往返与缓冲。</td></tr>
+<tr><td>经验纠错与复核</td><td><span class="tag p1">P1-4</span></td><td>让经验改进过程可追溯，适合展示反馈到复用。</td><td>提交证据→待复核→人工核验→生效；保留历史，不自动推广未核实结论。</td></tr>
+<tr><td>实际消费账本</td><td><span class="tag p1">P1-5</span></td><td>扩展行中使用，并可辅助预算约束。</td><td>先手动输入，程序计算；区分已付款与未来预计，避免重复计入。</td></tr>
+<tr><td>小票识别 / 更多订单格式</td><td><span class="tag p1">P1-6</span></td><td>提供现场互动，降低录入负担。</td><td>复用票券识别组件，再扩展小票与订单格式；必须确认字段后写入，保留手动录入。</td></tr>
+<tr><td>PDF或每日卡图片导出</td><td><span class="tag p1">P1-7</span></td><td>强化交付与分享，适合现场留存。</td><td>只选一种；标版本和生成时间，说明导出后不自动更新。</td></tr>
+<tr><td>照片小记＋简明回顾</td><td><span class="tag p1">P1-8</span></td><td>让旅行后也有可见成果，作为演示结尾。</td><td>来自用户实际照片和文字；用户可改；不自动发布。</td></tr>
+<tr><td>天气驱动 / 更多异常调整</td><td><span class="tag p1">P1-9</span></td><td>扩展适应能力，但增加实时数据与校验工作。</td><td>天气API覆盖期内使用预报；模拟输入必须标明。</td></tr>
+<tr><td>多城市目录、酒店餐厅大全</td><td><span class="tag p2">P2</span></td><td>属于产品覆盖度，短期难证明创新，维护成本高。</td><td>由内容来源、用户反馈与供应商能力逐步扩展。</td></tr>
+<tr><td>全面翻译、视频、多格式、退款集成</td><td><span class="tag p2">P2</span></td><td>分散主线，且有独立的质量和接口成本。</td><td>旅行核心稳定、验证用户需求后逐项开发。</td></tr>
+<tr><td>联盟分佣、收费、多设备实时协作</td><td><span class="tag p2">P2</span></td><td>可用于商业模式答辩，本次无需交易系统。</td><td>联盟资质、归因、用户账户、权限和实际付费验证。</td></tr>
+</tbody></table></div>
+<div class="callout"><p><strong>范围冻结规则：</strong>如果P0未通过验收，停止增加P1。五个新增方向均已纳入路线图，但不承诺在比赛内全部交付。按P1-1至P1-9推进；时间不足优先延后小记、导出、小票、账本和扩展推荐，保住体检、每日卡、变更校验、保存与经验复用。</p></div>
+</section>
+
+<section class="section" id="p0">
+<span class="secnum">05 / CORE SPECIFICATION</span><h2>功能规格：输入、动作、输出与验收</h2>
+<article class="feature"><h3><span class="tag p0">F01</span>引导用户建立一趟旅行</h3><dl class="spec"><dt>输入</dt><dd>日期、目的地、酒店地址、同行人数、兴趣、步行接受程度、预算币种与范围、已订活动。预算明确是否包含机票和酒店。</dd><dt>处理</dt><dd>使用简短表单＋必要的补充问题；把“不要太累”转成可由用户确认的条件，不能自行猜测为永久偏好。</dd><dt>输出</dt><dd>可编辑的旅行需求摘要，区分“用户提供”“默认假设”“尚待确认”。</dd><dt>验收</dt><dd>日期冲突被指出；未知酒店能继续但明确路线暂估；任何默认条件可修改。</dd></dl></article>
+<article class="feature"><h3><span class="tag p0">F02</span>生成总计划与每日行动卡</h3><dl class="spec"><dt>输入</dt><dd>确认的需求、地点库、营业时间与来源、地图行程时间、固定活动与预计费用。</dd><dt>处理</dt><dd>模型提出安排，程序检查时间重叠、固定活动、交通缓冲与预算完整性；缺少数据的项目标记待核验。</dd><dt>输出</dt><dd>总行程；每一天的行动卡；预订待办；预计预算。卡片展示时间、目的地原名、地址、交通、导航、入口与提醒。</dd><dt>验收</dt><dd>总计划与卡片引用同一项目；地址链接有效；不能把无法确认的票价和库存写成确定事实。</dd></dl></article>
+<div class="grid two"><div><h3>每日卡的阅读顺序</h3><ol><li>今天的主题与首个行动。</li><li>按时间排列的路线和交通。</li><li>已订 / 待订标识与预订入口。</li><li>出门前提醒、文化背景和附近选择。</li><li>预计费用、数据更新时间与修改入口。</li></ol><p class="meta">右侧为信息结构示例，时间、地点均为占位说明，不是可直接执行的米兰攻略。</p></div><div class="phone"><div class="phone-head">DAY 02 · 艺术与城市漫步<br><small>行程版本 v3 · 今日计划示例</small></div><div class="phone-row"><time>10:00</time><div><strong>从酒店出发</strong><p>出发地址、公共交通方式、导航入口</p></div></div><div class="phone-row"><time>11:00</time><div><strong>第一处体验 · 可调整</strong><p>为什么适合你 / 预计停留 / 背景卡</p></div></div><div class="phone-row"><time>15:00</time><div><strong>已订活动 · 时间固定</strong><p>确认凭证 / 入场地址 / 提前到达提醒</p></div></div><div class="phone-row"><time>傍晚</time><div><strong>附近晚餐与返回</strong><p>候选餐厅 / 预计费用 / 酒店定位</p></div></div></div></div>
+<article class="feature"><h3><span class="tag p0">F03</span>按兴趣生成简明背景手册</h3><dl class="spec"><dt>输入</dt><dd>实际选中的景点、用户兴趣、可信背景资料与适用提醒。</dd><dt>处理</dt><dd>每个地点先生成“为什么值得看、重点看什么、现场注意什么”；电影关联等资料在有可靠依据时补充。</dd><dt>输出</dt><dd>行程内可展开的文化背景卡；汇总为手册视图。按兴趣改变重点，避免长篇通用百科。</dd><dt>验收</dt><dd>无关景点不混入；事实可追溯；着装要求与个人建议分开；手册随行程增删同步变化。</dd></dl></article>
+<article class="feature"><h3><span class="tag p0">F04</span>接收变化，生成受约束的新安排</h3><dl class="spec"><dt>触发</dt><dd>“晚一小时出门”“下午少走路”“这个地方不想去了”。P0先覆盖明确的时间和偏好修改。</dd><dt>处理</dt><dd>解析影响范围 → 读取固定预订 → 查询必要交通信息 → 产生新草案 → 校验 → 展示前后差异 → 用户确认 → 保存新版本。</dd><dt>输出</dt><dd>修改项目、原因、交通与预计费用差异；总行程、行动卡、背景卡同步更新。</dd><dt>验收</dt><dd>已订活动不被悄悄移动；无解时解释冲突并提供选项；失败保留旧版本；确认前不覆盖。</dd></dl></article>
+<article class="feature"><h3><span class="tag p0">F05</span>保存、筛选并复用经验</h3><dl class="spec"><dt>输入</dt><dd>用户确认的长期偏好，或具备地点、时间、条件与来源的亲历经验。</dd><dt>处理</dt><dd>先区分临时状态、个人偏好、地点事实与通用方法；只将适用且仍有效的内容用于后续推荐。</dd><dt>输出</dt><dd>“这次采用了哪些经验”的说明；下一次生成能体现已确认偏好；用户可修改或删除记忆。</dd><dt>验收</dt><dd>背包客与大行李旅客可得到不同建议；一次抱怨不直接写成永久规则；没有复用记录不声称已经学习。</dd></dl></article>
+<article class="feature"><h3><span class="tag p0">F06 · P0</span>行程体检与修复</h3><dl class="spec"><dt>输入</dt><dd>已有计划文本或本产品行程、交通资料、固定预订。</dd><dt>处理</dt><dd>解析为活动列表并由用户确认；复用时间与交通校验器；按问题展示依据、影响和修复候选。</dd><dt>输出</dt><dd>体检结果分为已验证冲突、待核验信息、偏好提醒；确认修改后生成新版本。</dd><dt>验收</dt><dd>确定的时间冲突不能漏报；资料不足不判定正常；修复后复检；营业时间检查仅在有有效来源时启用。</dd></dl></article>
+<article class="feature"><h3><span class="tag p1">F07 · P1-1</span>从票券照片触发行程操作</h3><dl class="spec"><dt>输入</dt><dd>演出票照片；可见的日期、时间、场地、人数等信息。</dd><dt>处理</dt><dd>识别字段→用户补齐和确认→查找场地→保存固定活动→运行体检→提出重排→确认应用。</dd><dt>输出</dt><dd>一个实际写入行程的固定活动，及与其一致的每日卡；重复票券先提醒。</dd><dt>验收</dt><dd>模糊日期不猜测；区分开门与开演时间；不宣称票券有效；重复上传不重复入账或建活动。</dd></dl></article>
+<article class="feature"><h3><span class="tag p1">F08 · P1-2</span>同行者偏好协调</h3><dl class="spec"><dt>输入</dt><dd>两人的必须条件、兴趣偏好、可妥协项；同一设备填写。</dd><dt>处理</dt><dd>优先满足双方硬约束；冲突需选择；生成两套解释清楚的候选，必要时提出分开活动与会合地点。</dd><dt>输出</dt><dd>条件满足表、未满足项、两案差异；选定后接入现有行程与版本系统。</dd><dt>验收</dt><dd>不编造满意度百分比；不可满足的条件明确列出；分开活动为可选提案，不自动采用。</dd></dl></article>
+<article class="feature"><h3><span class="tag p1">F09 · P1-3</span>现在有90分钟，附近能做什么</h3><dl class="spec"><dt>输入</dt><dd>用户提供或授权的位置、空闲时长、下一固定活动的地点和到达要求。</dd><dt>处理</dt><dd>检索附近候选→核验开放信息→计算去程、停留、前往下一站及缓冲→按兴趣和预算排序。</dd><dt>输出</dt><dd>最多三个可行选项，显示总用时、出发截止时间、费用依据和推荐理由；确认后加入行程。</dd><dt>验收</dt><dd>总用时在空档内；包含到下一站的路程；无可行结果时明确说明；位置和交通缺失时请求补充。</dd></dl></article>
+<article class="feature"><h3><span class="tag p1">F10 · P1-4</span>经验纠错、复核与后续使用</h3><dl class="spec"><dt>输入</dt><dd>用户指出旧入口、旧时间或不适用经验，并提供照片、链接或文字说明。</dd><dt>处理</dt><dd>记录原经验与证据→设为待复核→核验来源与适用范围→审核通过后生效→保留变更历史。</dd><dt>输出</dt><dd>可查看的反馈状态与新旧经验；后续计划显示实际引用的版本。</dd><dt>验收</dt><dd>待复核信息不作为确定事实传播；个人口味不改写公共事实；不自动改动他人已确认行程；外部发布另行授权。</dd></dl></article>
+<div class="callout warn"><p><strong>“学习”的准确含义：</strong>本版是保存经确认的偏好与经验，并在后续任务中检索复用；不宣称训练了新模型，也不把私人订单、照片或行程自动发布到公共经验网络。</p></div>
+</section>
+
+<section class="section" id="journey">
+<span class="secnum">06 / USER WORKFLOW</span><h2>用户从第一次打开，到旅行结束</h2>
+<ol class="timeline">
+<li><h3>建立旅行 <span class="tag p0">P0</span></h3><p>选择城市与日期，或粘贴已有计划 → 提供酒店、兴趣、预算与固定安排 → 补充关键缺项 → 确认需求摘要。P1可录入两位同行者的硬条件与偏好。</p><p class="meta">保存为草稿；退出后可以继续。未知信息明确标记。</p></li>
+<li><h3>收到第一套成果 <span class="tag p0">P0</span></h3><p>体检初稿并确认修复 → 浏览总计划 → 打开每日卡 → 阅读背景手册 → 查看待订项目和预计花费 → 修改不合适的安排。</p><p class="meta">生成中显示实际进度；失败提供重试与已有内容，不能只留下空白页。</p></li>
+<li><h3>完成必要预订 <span class="tag p0">P0手动</span></h3><p>点击可信订票入口 → 在供应商处完成预订 → 返回录入日期与状态 → 确认后锁定活动。</p><p class="meta">跳转不代表成交；未接入库存，不提供实时有票保证。P1先增加演出票照片识别；确认字段后加入固定活动，再体检和重排。</p></li>
+<li><h3>今天出发与途中调整 <span class="tag p0">P0</span></h3><p>查看今日卡 → 打开导航 → 输入变化 → 查看新旧安排与冲突 → 确认新版本 → 继续旅行。</p><p class="meta">P1可使用“90分钟空档”推荐插入可行体验。临时偏好优先影响当前日期；需要长期记住的内容单独确认。</p></li>
+<li><h3>记消费与当下感受 <span class="tag p1">P1</span></h3><p>手动输入或拍照 → 确认金额、币种、日期 → 更新账本 → 需要时请求更符合剩余预算的安排；照片＋一句感受生成可编辑小记。</p><p class="meta">账本写入与修改行程分开确认。小费、多人付款和重复小票必须能人工修正。</p></li>
+<li><h3>回顾与下一次复用 <span class="tag p0">P0经验</span><span class="tag p1">P1回顾</span></h3><p>确认值得保留的偏好和经验 → 汇总实际记录与照片 → 留下想再去的地点 → 下一次创建旅行时复用适用内容。</p><p class="meta">P1支持经验纠错并查看复核状态；未经复核不作为确定事实推广。相册视频、退款集成等完整旅行后功能属于P2。</p></li>
+</ol>
+</section>
+
+<section class="section" id="architecture">
+<span class="secnum">07 / IMPLEMENTATION</span><h2>给技术伙伴：如何实现，哪些工作交给谁</h2>
+<p><strong>建议第一版：</strong>响应式网页＋服务端模型调用＋轻量数据库。沿用团队熟悉的技术栈，不为参赛引入不必要的复杂架构。Codex辅助开发、调试和测试；产品运行时仍需模型服务、存储与必要的外部数据接口。</p>
+<div class="flow" aria-label="技术处理流程"><span>网页输入</span><b>→</b><span>旅行任务服务</span><b>→</b><span>模型＋工具</span><b>→</b><span>结构校验＋约束检查</span><b>→</b><span>版本保存</span><b>→</b><span>卡片与手册渲染</span></div>
+<div class="grid two"><div class="card"><h3>模型负责理解与提案</h3><p>提取需求、选择候选活动、提出重排方案、生成中文说明与文化内容。通过受控工具获取资料，输出符合约定结构的数据。</p></div><div class="card"><h3>程序负责计算与一致性</h3><p>行程体检、硬条件满足检查、空档时间计算、金额汇总、币种处理、时间冲突、固定项目锁定、版本写入、权限与链接校验。卡片和手册从同一版本生成。</p></div></div>
+<h3 style="margin-top:24px">最小数据对象</h3>
+<div class="table-wrap"><table><thead><tr><th>对象</th><th>关键字段 / 约束</th></tr></thead><tbody>
+<tr><td>Trip · 旅行</td><td>日期、目的地、当地时区、酒店、同行者、预算范围、基础币种、确认偏好、当前版本。</td></tr>
+<tr><td>Activity · 活动</td><td>稳定ID、地点、起止时间、交通、费用与来源、预订状态、锁定标志、背景内容引用。</td></tr>
+<tr><td>PlanVersion · 行程版本</td><td>版本号、父版本、完整活动列表、改动原因、校验结果、确认状态。提交成功才成为当前版本。</td></tr>
+<tr><td>Evidence · 信息依据</td><td>来源链接、访问或核验时间、有效日期、适用范围、可信状态。动态事实与文化背景分开管理。</td></tr>
+<tr><td>Experience · 经验</td><td>来源、具体地点、适用条件、有效期或复核日期、用户确认、个人/公开属性、使用记录。</td></tr>
+<tr><td>AuditIssue · 体检问题</td><td>问题类型、涉及活动ID、证据、确定性、影响、候选修复与复检结果。</td></tr>
+<tr><td>Participant · 同行者（P1）</td><td>标识、硬条件、兴趣、可妥协项、会合约束；不需要初版就建立多用户账号。</td></tr>
+<tr><td>FeedbackReview · 经验复核（P1）</td><td>原经验ID、提交证据、待复核/通过/驳回状态、复核人、有效范围、生效时间与历史版本。</td></tr>
+<tr><td>Expense · 消费（P1）</td><td>原始金额与币种、日期、类别、汇率与时间、实际扣款修正、付款状态、关联活动和去重标记。</td></tr>
+<tr><td>Memory · 小记（P1）</td><td>照片、实际日期与地点、用户原话、生成文本、编辑结果；不把计划中的活动自动当作已发生。</td></tr>
+</tbody></table></div>
+<h3>关键工具与降级方式</h3>
+<div class="table-wrap"><table><thead><tr><th>依赖</th><th>正常使用</th><th>失败或尚未接入</th></tr></thead><tbody>
+<tr><td>地点与官网信息</td><td>检索可信页面＋已整理的地点库。</td><td>使用注明核验时间的资料；标记待确认，不杜撰营业时间。</td></tr>
+<tr><td>地图与路程时间</td><td>查询坐标与指定交通方式的预计用时。</td><td>使用事先核验的演示路线并标记非实时；不声称实时路况。</td></tr>
+<tr><td>天气 / 汇率</td><td>天气在预报覆盖期内调用；汇率附时间。</td><td>天气缺失就不确定推荐；估算汇率明确标注，不视为银行卡结算价。</td></tr>
+<tr><td>图像识别（P1）</td><td>识别金额或订单字段，用户确认。</td><td>保持手动输入可用；失败不创建消费或预订记录。</td></tr>
+<tr><td>EvoMap</td><td>先验证相关recipe的检索、读取与实际复用；按权限起草或发布通用工作流。<a href="#s6">[6]</a></td><td>无相关资产时如实说明；本地经验库可支持产品流程，但不能冒充已完成EvoMap集成。</td></tr>
+</tbody></table></div>
+<p><strong>部署底线：</strong>密钥保留在服务端；公开演示使用去标识化数据；多人试用隔离各自旅行。未做账户系统时，使用不含私人信息的演示会话，避免所有人写入同一份旅行。</p>
+<p><strong>状态一致性：</strong>生成和调整先落为候选版本，校验通过且用户确认后再切换。对重复点击防重入；过期版本不能覆盖较新版本。地图失败时保留原行程。</p>
+</section>
+
+<section class="section" id="roadmap">
+<span class="secnum">08 / BUILD SEQUENCE</span><h2>逐步推进：每一步都有交付与通过条件</h2>
+<p>以下是工作顺序，不是对工时的承诺。按已确认的比赛开发窗口安排；赛前可准备到什么程度遵循主办方规则。</p>
+<div class="table-wrap"><table class="wide"><thead><tr><th>步骤</th><th>要做的工作</th><th>主要负责人</th><th>交付物</th><th>通过后才进入下一步</th></tr></thead><tbody>
+<tr><td>0 · 范围与规则</td><td>确认赛道与EvoMap要求；确定演示城市；冻结P0与一个核心变化场景；试跑关键API。</td><td>产品＋技术</td><td>一页范围表、素材清单、接口验证结果。</td><td>知道外部依赖是否可用；不可用时已有明确方案。</td></tr>
+<tr><td>1 · 数据与样板</td><td>整理地点、来源、背景卡、两种用户条件和固定活动；定义旅行与版本字段。</td><td>产品主导，技术校验</td><td>一份高质量人工样板＋结构化示例数据。</td><td>内容能核验；足以支撑三天演示，不靠临场编信息。</td></tr>
+<tr><td>2 · 可用网页</td><td>建立旅行、总计划、每日卡、背景手册；先用明确标注的样例数据做显示与保存。</td><td>技术＋Codex；产品验收</td><td>手机网页第一版，刷新可重开。</td><td>核心页面可操作；样例与真实生成状态区分清楚。</td></tr>
+<tr><td>3 · 真实生成</td><td>接模型与资料工具；结构化输出；程序校验；生成并保存第一版旅行。</td><td>技术＋Codex</td><td>真实输入或已有行程到体检与整套交付的可运行流程。</td><td>至少两组需求能生成不同且可解释的方案；已导入的活动能够体检。</td></tr>
+<tr><td>4 · 调整与一致性</td><td>实现行程体检、固定活动锁定、重排、差异展示、确认、版本保存与失败回退。</td><td>技术主导；产品测试</td><td>参赛核心演示：改条件后整套更新。</td><td>固定预订、时间、版本、费用检查通过；不能只改文字。</td></tr>
+<tr><td>5 · 经验复用</td><td>确认偏好、按条件检索经验、展示引用；按规则完成EvoMap接入。</td><td>共同完成</td><td>同一需求加入经验前后的结果对照。</td><td>经验可追溯、有适用条件；实际影响结果，有复用记录。</td></tr>
+<tr><td>6 · P0验收</td><td>完整功能测试、真实用户试用、网络失败与多设备检查；修复阻断问题。</td><td>产品＋技术</td><td>测试记录、用户反馈、缺陷列表。</td><td>核心流程稳定；否则不增加P1。</td></tr>
+<tr><td>7 · 选择P1</td><td>按优先级增加票券操作、两人协调、空档推荐、经验复核，再考虑账本、导出、小记；一次只加一个并回归核心流程。</td><td>按剩余时间分配</td><td>通过验收的增强功能。</td><td>新功能不损害P0；未完成的功能不放进现场承诺。</td></tr>
+<tr><td>8 · 冻结与路演</td><td>冻结功能；整理证据；准备讲解、演示数据、备用录屏与本地快照。</td><td>产品主讲，技术保障</td><td>可访问原型、演示脚本、技术说明、真实指标。</td><td>连续演练完成；演示数据和备用内容均有标识。</td></tr>
+</tbody></table></div>
+<div class="grid two"><div class="card"><h3>你承担的关键工作</h3><p>挑选真实旅行场景；提供内容样板与亲历经验；定义“好看、好找、走得通”；试用验收；路演表达与用户反馈。</p></div><div class="card"><h3>技术伙伴与Codex</h3><p>技术伙伴确定数据和接口边界、审查关键逻辑、处理部署；Codex按任务实施代码、运行检查、修复与整理文档。每个任务必须附验收条件。</p></div></div>
+<div class="callout"><p><strong>建议投入顺序：</strong>核心生成与调整 → 经验复用 → 测试稳定 → 视觉完善 → P1。预留总开发窗口最后约四分之一用于修复、试用与路演；这个比例是排期建议。</p></div>
+</section>
+
+<section class="section" id="acceptance">
+<span class="secnum">09 / VALIDATION</span><h2>用什么证明：好用、可靠、有差异</h2>
+<p>以下是拟定的验收标准，尚未执行。测试结果必须记录成功与失败，不把目标写成已实现指标。</p>
+<div class="table-wrap"><table class="wide"><thead><tr><th>测试</th><th>操作</th><th>通过条件</th></tr></thead><tbody>
+<tr><td>T01 首次创建</td><td>输入完整需求生成三天计划。</td><td>总计划、三张每日卡与对应背景卡均可打开；生成失败有明确状态。</td></tr>
+<tr><td>T02 固定预订</td><td>晚一小时出门，保留下午固定活动。</td><td>固定活动时间与状态不变；路程和缓冲可行；无解时不强行生成。</td></tr>
+<tr><td>T03 全局一致</td><td>确认一次重排，再看各个页面。</td><td>日期、顺序、地点与预计费用来自同一版本；旧内容不残留为当前计划。</td></tr>
+<tr><td>T04 失败恢复</td><td>工具超时或生成结果不合格。</td><td>原计划未丢失，可重试；不显示假成功。</td></tr>
+<tr><td>T05 保存与防重</td><td>刷新、重复点击确认、打开旧版本。</td><td>不生成重复项目，不用旧版本覆盖新版本；可以回到上一版。</td></tr>
+<tr><td>T06 条件化经验</td><td>同一地点分别用于背包与大行李用户。</td><td>只有条件匹配时才采用经验；展示来源和适用原因。</td></tr>
+<tr><td>T07 临时与长期偏好</td><td>输入“今天太累”，再建立新旅行。</td><td>未经确认不永久降低所有旅行强度；确认后的偏好能复用。</td></tr>
+<tr><td>T08 资料可信度</td><td>检查抽取的地址、时间、价格与链接。</td><td>动态内容有时间与来源；缺失明确标注；没有虚构库存或预订成功。</td></tr>
+<tr><td>T09 手机操作</td><td>在窄屏完成创建、浏览和调整。</td><td>无需缩放才能读正文；关键操作可触达；无横向溢出或遮挡。</td></tr>
+<tr><td>T10 预算（P1）</td><td>修改金额、币种，重复上传一张小票。</td><td>用户确认后入账；算术正确；有重复提醒；估算与实际不重复计入。</td></tr>
+</tbody></table></div>
+<h3>新增功能验收</h3><div class="table-wrap"><table><thead><tr><th>测试</th><th>操作</th><th>通过条件</th></tr></thead><tbody><tr><td>T11 行程体检（P0）</td><td>导入有时间冲突、交通缓冲不足和未知资料的计划。</td><td>分别指出已验证问题与待核验项；确认修复后复检；无资料不报“全部正常”。</td></tr><tr><td>T12 票券动作（P1）</td><td>上传清晰、模糊和重复演出票照片。</td><td>字段需确认；固定活动正确加入；模糊字段待补充；重复票不重复创建。</td></tr><tr><td>T13 同行协调（P1）</td><td>两人兴趣不同，再加入无法兼容的硬条件。</td><td>提供可解释的候选；冲突需人工取舍；不声称无依据的满意度。</td></tr><tr><td>T14 空档推荐（P1）</td><td>设置90分钟空档与下一固定活动。</td><td>去程、停留、到下一站与缓冲之和符合限制；无可行项目如实说明。</td></tr><tr><td>T15 经验复核（P1）</td><td>提交一条错误反馈，再提交有来源支持的纠正。</td><td>未通过信息不作为事实复用；核验后生效；历史可查；私人信息不公开。</td></tr></tbody></table></div><h3>三份有说服力的证据</h3>
+<div class="grid"><div class="card"><h3>用户证据</h3><p>邀请3–5位目标用户独立完成任务。记录完成率、耗时、需要帮助的次数与主要卡点；样本小，仅作为探索结果。</p></div><div class="card"><h3>可靠性证据</h3><p>用同一组变更案例记录固定项目保留率、冲突数、页面一致性、失败恢复情况和实际响应耗时。</p></div><div class="card"><h3>对照证据</h3><p>给同一模型相同需求与资料，对比直接聊天和产品流程；使用合理提示，不人为弱化基线。记录遗漏与用户额外操作。</p></div></div>
+<p style="margin-top:16px"><strong>建议发布门槛：</strong>P0关键验收全部通过；新增P0行程体检也必须通过；同一演示连续成功三次；更换至少一组输入仍能完成；存在未解决问题时准确披露。此门槛是内部质量要求，不是官方评分标准。</p>
+</section>
+
+<section class="section" id="demo">
+<span class="secnum">10 / DEMO STORY</span><h2>让评委在一段旅行里看懂整个产品</h2>
+<p>下列为约4分钟的演示模板，实际按主办方时长调整。原生智能体赛道重点展示工具、状态与可验证结果；美感用于帮助理解。</p>
+<div class="table-wrap"><table><thead><tr><th>时间建议</th><th>展示动作</th><th>观众看到的价值</th></tr></thead><tbody>
+<tr><td>0:00–0:25</td><td>用亲历问题开场：规划时反复找信息，到了现场又要修改。</td><td>具体问题与目标用户。</td></tr>
+<tr><td>0:25–1:10</td><td>展示已有计划的体检与修复，再打开总行程、每日卡和背景书。长任务可先展示生成中的进度，再打开已完成样例并明确标注。</td><td>一套可使用的交付物，信息组织清楚。</td></tr>
+<tr><td>1:10–2:20</td><td>现场输入“晚出门一小时，下午已订活动保留”；看查询、校验、差异和更新后的卡片。</td><td>AI实际完成受约束的调整，是演示核心。</td></tr>
+<tr><td>2:20–3:00</td><td>切换大行李/背包条件，展示适用经验改变推荐；确认偏好并在后续计划中复用。</td><td>经验有作用，个性化有证据。</td></tr>
+<tr><td>3:00–3:25</td><td>P1完成则从票券触发、同行协调或空档推荐中选择一个展示；经验复核放入答辩素材。未完成则展示恢复或用户试用结果。</td><td>扩展体验或可靠性，避免为了凑功能演示假按钮。</td></tr>
+<tr><td>3:25–4:00</td><td>展示实测结果、技术分工、已知限制与下一阶段；可用旅行回忆页收尾。</td><td>可信度、完成度与后续价值。</td></tr>
+</tbody></table></div>
+<div class="grid two"><div class="card"><h3>核心答辩：为什么不直接问AI？</h3><p>我们主动补齐旅行条件，并把结果保存为统一的旅行数据。一次修改会触发约束检查和所有相关交付物更新。用相同任务的实际对照结果说明节省了哪些操作。</p></div><div class="card"><h3>核心答辩：什么是你们的贡献？</h3><p>旅行任务设计、经验适用条件、固定预订与版本机制、中文行动卡与文化交付，以及验证这些能力的真实案例。使用Codex开发如实说明。</p></div></div>
+<p style="margin-top:18px"><strong>演示诚信：</strong>实时调用、缓存资料、人工整理信息和模拟事件分别标记；备用录屏明确说是录屏；不声称已经自动订票、真实退款或自动训练模型。</p>
+</section>
+
+<section class="section" id="decisions">
+<span class="secnum">11 / TEAM DISCUSSION</span><h2>开会时按这个顺序作决定</h2>
+<div class="table-wrap"><table><thead><tr><th>待决定</th><th>建议默认方案</th><th>谁确认 / 影响</th></tr></thead><tbody>
+<tr><td>演示城市与用户</td><td>选择资料最充分的一座欧洲城市，三天、一个固定预订。</td><td>产品；决定内容准备与数据成本。</td></tr>
+<tr><td>核心演示变化</td><td>晚出门＋减少步行，保留固定活动。</td><td>共同；决定首批工具与测试案例。</td></tr>
+<tr><td>预算定义</td><td>先覆盖当地交通、门票和餐饮；机酒另列，不混入每日剩余额度。</td><td>产品；明确计算口径。</td></tr>
+<tr><td>技术与部署</td><td>沿用技术伙伴熟悉的网页栈；服务端调用模型；数据库保存版本。</td><td>技术；确认接口、成本和可用环境。</td></tr>
+<tr><td>EvoMap最低要求</td><td>优先验证相关工作流检索与复用；按本场规则决定硬性范围。</td><td>联系主办方＋技术验证；不能等路演前再做。</td></tr>
+<tr><td>第一个P1</td><td>票券照片→确认固定活动→体检重排；接着两人偏好协调、空档推荐与经验复核。</td><td>共同；只在P0通过后排入。</td></tr>
+<tr><td>演示素材</td><td>去标识化真实旅行资料；原创或获准使用的照片；一份人工高质量样板。</td><td>产品；建立内容与视觉基准。</td></tr>
+</tbody></table></div>
+<h3>暂不影响P0的商业化方向</h3><p>官网入口可免费；后续测试合作订票分佣与按趟收费的完整旅行包。普通官网链接没有自动佣金，合作归因与收费意愿需验证；比赛中展示为商业假设，不作为已实现收入。</p>
+<div class="callout"><p><strong>本次会议结束时应留下：</strong>确认的P0清单、演示场景、负责人、数据来源、技术依赖和第一轮验收时间。范围变化需写清楚替换掉哪项工作。</p></div>
+</section>
+
+<section class="section" id="sources">
+<span class="secnum">12 / SOURCES & LIMITS</span><h2>研究依据与信息边界</h2>
+<p>资料核对日期：2026年9月9日。参赛策略基于公开材料与产品判断；往届规则不自动适用于深圳场。</p>
+<ol class="sources">
+<li id="s1"><a href="https://hackathon.evomap.ai/hangzhou" target="_blank" rel="noopener noreferrer">EvoTavern 杭州场官方页面</a>：赛道强调经验共享、长记忆、垂类改进；提供日程与作品列表。支持主题判断，不提供深圳评分权重。</li>
+<li id="s2"><a href="https://hackathon.evomap.ai/shanghai" target="_blank" rel="noopener noreferrer">EvoTavern 上海场官方作品列表</a>：列有EvoTravel与Term Shit等项目；EvoTravel详情页读取失败，不能判断其具体技术、效果或获奖情况。</li>
+<li id="s3"><a href="https://www.sohu.com/a/1027736343_702717" target="_blank" rel="noopener noreferrer">上海夜之城黑客松赛后报道（搜狐号，来源标注东方财经，2026-05-26）</a>：将投资人AI分身作品描述为A2A赛道冠军。属媒体报道，不等同于完整官方获奖名录或评审意见；不采纳文章中的营销性能数字。</li>
+<li id="s4"><a href="https://mindtrip.ai/" target="_blank" rel="noopener noreferrer">Mindtrip 官方产品介绍</a>：个性化行程、地图、协作与凭证整理等。仅用于确认已有功能范围，未做实际性能评测。</li>
+<li id="s5"><a href="https://wanderlog.com/" target="_blank" rel="noopener noreferrer">Wanderlog 官方产品介绍</a>：行程、路线优化、预算、预订整理等。不能由此断言其不具备某项未在本稿列出的能力。</li>
+<li id="s6"><a href="https://hackathon.evomap.ai/developers?edition=hangzhou" target="_blank" rel="noopener noreferrer">EvoTavern 开发者工具包</a>：OAuth授权、gene/recipe读取与复用、草稿和发布权限说明；需要技术团队实际验证接口与资产适用性。</li>
+<li><a href="https://hackathon.evomap.ai/" target="_blank" rel="noopener noreferrer">EvoTavern 活动官网</a>：本次读取时展示上海、北京、杭州往届入口。深圳场日期、奖项与赛道描述依据用户提供海报，完整章程待主办方确认。</li>
+</ol>
+<p class="meta">尚待核实：深圳场评分权重、演示时长、提交物、EvoMap强制接入范围、开发窗口与现有素材规则。本文未假定其有已验证答案。</p>
+</section>
+<footer class="foot">欧洲旅行智能体 · 产品与技术讨论稿 v1.1<br>先完成一趟旅行的真实流程，再扩展功能与目的地。</footer>
+</main></div>
+</body>
+</html>
