@@ -32,7 +32,7 @@
 ## 预览 → 确认（写与不写）
 
 1. 检查后出现问题列表。此时 `journey` 不变。
-2. 打开「全程安排」仍应是旧时间表。
+2. 打开「全程安排」仍应是旧时间表。本页用 `keepMounted` 挂着，回来时预览还在。
 3. 「预览选中修复」生成 `preview.next`，仍不写当前行程。
 4. 「确认应用」才 `setPrevious(当前)` + `setJourney(next)`。
 5. 若 `preview.baseVersion !== journey.version`，丢弃预览并要求重做。

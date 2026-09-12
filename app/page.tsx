@@ -341,7 +341,7 @@ export default function Home() {
             <TabsTrigger value="budget">旅行账本</TabsTrigger>
             <TabsTrigger value="memory">旅行回顾</TabsTrigger>
           </TabsList>
-          <TabsContent value="health">
+          <TabsContent value="health" keepMounted>
             <HealthPanel
               journey={journey}
               onApply={(next) => {
