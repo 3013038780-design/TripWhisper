@@ -8,6 +8,7 @@ import { exportDayCard } from '@/lib/export-card';
 import { Budget } from '@/components/travel/budget';
 import { Bookings } from '@/components/travel/bookings';
 import { Handbook } from '@/components/travel/handbook';
+import { ReplanPanel } from '@/components/travel/replan';
 import {
   regenerateWithBookings,
   safeExpense,
@@ -19,9 +20,6 @@ import {
   LockKeyhole,
   Compass,
   ArrowRight,
-  RotateCcw,
-  CloudRain,
-  Footprints,
   Bookmark,
   Check,
   Download,
@@ -29,7 +27,6 @@ import {
 import {
   initialProfile,
   generate,
-  adjust,
   estimate,
   dateAt,
   directions,
@@ -127,7 +124,6 @@ export default function Home() {
     generate(initialProfile),
   );
   const [previous, setPrevious] = useState<Journey | null>(null);
-  const [pending, setPending] = useState<Journey | null>(null);
   const [day, setDay] = useState(0);
   const [memories, setMemories] = useState<string[]>([]);
   const [note, setNote] = useState('');
@@ -266,7 +262,6 @@ export default function Home() {
       setTimeout(() => {
         setPrevious(journey);
         setJourney({ ...next, version: journey.version + 1 });
-        setPending(null);
         setDay(0);
         setTab('plan');
         setMessage('行程已更新。请确认日期与官网信息，再进行真实预订。');
@@ -275,10 +270,6 @@ export default function Home() {
     } catch (e) {
       setMessage((e as Error).message);
     }
-  }
-  function stage(mode: 'rain' | 'rest') {
-    setPending(adjust(journey, day, mode));
-    setMessage('调整建议已准备好，确认后才会更新行程。');
   }
   function exportTrip() {
     const file = new Blob(
@@ -354,7 +345,6 @@ export default function Home() {
               onApply={(next) => {
                 setPrevious(journey);
                 setJourney(next);
-                setPending(null);
                 setMessage('预订记录已更新，行程与每日卡已同步。');
               }}
             />
@@ -384,7 +374,6 @@ export default function Home() {
                       className={'chip ' + (day === i ? 'active' : '')}
                       onClick={() => {
                         setDay(i);
-                        setPending(null);
                       }}
                     >
                       Day {String(i + 1).padStart(2, '0')}
@@ -423,77 +412,27 @@ export default function Home() {
                 ))}
               </section>
               <aside>
-                <section className="panel">
-                  <h3>计划跟着你走</h3>
-                  <p className="note">今天的情况变了？先看看替代安排。</p>
-                  <div className="row">
-                    <button className="secondary" onClick={() => stage('rain')}>
-                      <CloudRain size={16} /> 下雨了
-                    </button>
-                    <button className="secondary" onClick={() => stage('rest')}>
-                      <Footprints size={16} /> 少走路
-                    </button>
-                  </div>
-                  {pending && (
-                    <div className="review-box">
-                      <h3>待确认的调整</h3>
-                      <p className="note">{pending.days[day].reason}</p>
-                      {pending.days[day].stops
-                        .filter((s, i) => s.name !== active.stops[i]?.name)
-                        .map((s, i) => (
-                          <p key={i} className="note">
-                            {s.time} → {s.name}
-                          </p>
-                        ))}
-                      {!pending.days[day].stops.some(
-                        (s, i) => s.name !== active.stops[i]?.name,
-                      ) && (
-                        <p className="note">
-                          当天没有适合替换的活动，原安排可保留。
-                        </p>
-                      )}
-                      <p className="note">
-                        已订项目与交通时段保持原样。室内替代地点需现场选择。
-                      </p>
-                      <div className="row">
-                        <button
-                          className="primary"
-                          onClick={() => {
-                            setPrevious(journey);
-                            setJourney(pending);
-                            setPending(null);
-                            setMessage('调整已应用，总行程与每日卡已同步。');
-                          }}
-                        >
-                          确认调整
-                        </button>
-                        <button
-                          className="secondary"
-                          onClick={() => setPending(null)}
-                        >
-                          取消
-                        </button>
-                      </div>
-                    </div>
-                  )}
-                  {previous && (
-                    <button
-                      className="small-link"
-                      style={{ border: 0, background: 'none', marginTop: 16 }}
-                      onClick={() => {
-                        setJourney(previous);
-                        setProfile(previous.profile);
-                        setPrevious(null);
-                        setPending(null);
-                        setDay(0);
-                        setMessage('已恢复上一版行程。');
-                      }}
-                    >
-                      <RotateCcw size={14} style={{ display: 'inline' }} />{' '}
-                      恢复上一版
-                    </button>
-                  )}
-                </section>
+                <ReplanPanel
+                  key={day + '-' + journey.version}
+                  journey={journey}
+                  day={day}
+                  previous={previous}
+                  onApply={(next) => {
+                    setPrevious(journey);
+                    setJourney(next);
+                    setMessage(
+                      '重排已应用，总行程、每日卡与预算已同步。',
+                    );
+                  }}
+                  onRestore={() => {
+                    if (!previous) return;
+                    setJourney(previous);
+                    setProfile(previous.profile);
+                    setPrevious(null);
+                    setDay(0);
+                    setMessage('已恢复上一版行程。');
+                  }}
+                />
                 <section className="panel">
                   <h3>旅行经验，小小提醒</h3>
                   <div className="callout">
@@ -558,7 +497,6 @@ export default function Home() {
                       style={{ background: 'none', border: 0, padding: 0 }}
                       onClick={() => {
                         setDay(i);
-                        setPending(null);
                         setTab('today');
                       }}
                     >
