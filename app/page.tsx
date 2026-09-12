@@ -8,6 +8,7 @@ import { exportDayCard } from '@/lib/export-card';
 import { Budget } from '@/components/travel/budget';
 import { Bookings } from '@/components/travel/bookings';
 import { Handbook } from '@/components/travel/handbook';
+import { ReplanPanel } from '@/components/travel/replan';
 import {
   regenerateWithBookings,
   safeExpense,
@@ -21,7 +22,6 @@ import {
   ArrowRight,
   RotateCcw,
   CloudRain,
-  Footprints,
   Bookmark,
   Check,
   Download,
@@ -423,15 +423,25 @@ export default function Home() {
                 ))}
               </section>
               <aside>
+                <ReplanPanel
+                  key={day + '-' + journey.version}
+                  journey={journey}
+                  day={day}
+                  onApply={(next) => {
+                    setPrevious(journey);
+                    setJourney(next);
+                    setPending(null);
+                    setMessage(
+                      '重排已应用，总行程、每日卡与预算已同步。',
+                    );
+                  }}
+                />
                 <section className="panel">
-                  <h3>计划跟着你走</h3>
-                  <p className="note">今天的情况变了？先看看替代安排。</p>
+                  <h3>天气变化</h3>
+                  <p className="note">下雨时仍可先预览室内替换，确认后才写入。</p>
                   <div className="row">
                     <button className="secondary" onClick={() => stage('rain')}>
                       <CloudRain size={16} /> 下雨了
-                    </button>
-                    <button className="secondary" onClick={() => stage('rest')}>
-                      <Footprints size={16} /> 少走路
                     </button>
                   </div>
                   {pending && (
@@ -462,7 +472,9 @@ export default function Home() {
                             setPrevious(journey);
                             setJourney(pending);
                             setPending(null);
-                            setMessage('调整已应用，总行程与每日卡已同步。');
+                            setMessage(
+                              '调整已应用，总行程、每日卡与预算已同步。',
+                            );
                           }}
                         >
                           确认调整

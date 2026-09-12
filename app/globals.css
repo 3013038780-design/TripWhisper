@@ -427,6 +427,13 @@ textarea {
   margin: 15px 0;
   white-space: pre-line;
 }
+.replan-preview h4 {
+  margin: 14px 0 6px;
+  font-size: 14px;
+}
+.replan-preview .tag {
+  margin-right: 4px;
+}
 .empty {
   padding: 40px;
   text-align: center;
