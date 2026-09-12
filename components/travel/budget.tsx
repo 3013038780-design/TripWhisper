@@ -5,7 +5,7 @@ import {
   NativeSelect,
   NativeSelectOption,
 } from '@/components/ui/native-select';
-import { Wallet, Plus, Trash2, ArrowUpRight } from 'lucide-react';
+import { Wallet, Plus, Trash2 } from 'lucide-react';
 import { createExpense, dailyExpenses, type Expense } from '@/lib/workspace';
 import { dateAt, type Journey } from '@/lib/journey';
 export function Budget({
