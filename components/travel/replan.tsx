@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { type Journey } from '@/lib/journey';
@@ -26,6 +26,11 @@ export function ReplanPanel({
   const [reduceWalking, setReduceWalking] = useState(false);
   const [preview, setPreview] = useState<ReplanPreview | null>(null);
   const [error, setError] = useState('');
+  const previewRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (preview) previewRef.current?.scrollIntoView({ block: 'nearest' });
+  }, [preview]);
 
   function runPreview() {
     try {
@@ -85,7 +90,7 @@ export function ReplanPanel({
         </p>
       )}
       {preview && (
-        <div className="review-box replan-preview">
+        <div className="review-box replan-preview" ref={previewRef}>
           <h3>待确认的受约束重排</h3>
           <p className="note">
             {preview.conditions.delayMinutes > 0
